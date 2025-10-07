@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 class Books(models.Model):
@@ -18,4 +18,43 @@ class Books(models.Model):
     class Meta:
         verbose_name = 'Книгу'
         verbose_name_plural = 'Книги'
-        
+
+class Reviews(models.Model):
+    choice_book = models.ForeignKey(Books, on_delete=models.CASCADE, related_name='reviews')
+    mark_book = models.PositiveIntegerField(verbose_name='поставьте оценку от 1 до 5', 
+                                       validators=[MaxValueValidator(5), MinValueValidator(1)])
+    
+    review_text = models.TextField(default='Прикольная книга')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.choice_book} - {self.mark_book}'
+
+    class Meta:
+        verbose_name = 'отзыв'
+        verbose_name_plural = 'отзывы'
+
+class Person(models.Model):
+    name = models.CharField(max_length=100, default="Нрсултан")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+    
+    class Meta:
+        verbose_name = "Туриста"
+        verbose_name_plural = "Туристы"
+
+class Tour(models.Model):
+    passport = models.OneToOneField(Person,on_delete=models.CASCADE, related_name='driver' )                                      
+    tour_at = models.CharField(max_length=100, default='Япония')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.tour_at}-{self.passport.name}'
+    
+    class Meta:
+        verbose_name = 'тур'
+        verbose_name_plural = 'туры'
+
+          

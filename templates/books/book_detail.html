@@ -5,3 +5,17 @@
     <p>{{ book_id.author }}</p>
     <iframe src="{{ book_id.book_audio }}" frameborder="0"></iframe>
     <p>{{ book_id.created_at }}</p>
+
+    <h3>Средняя Оценка отзывов:  </h3>
+
+    <ul>
+        {% for i in book_id.reviews.all %}
+
+        <li>
+            <p>Оценка:{{ i.mark_book }}</p>
+            <p>{{ i.review_text }}</p>
+            <p>{{ i.created_at }}</p>
+        </li>
+
+        {% endfor %}
+    </ul>

@@ -5,6 +5,14 @@ from datetime import datetime
 import random
 from . import models
 
+ 
+
+
+
+
+
+
+
 #ListView
 def book_list_view(request):
     if request.method == 'GET':
@@ -14,7 +22,7 @@ def book_list_view(request):
         }
         return render(request, template_name='books/book_list.html', context=context)
 
-#DitailView
+#ListView
 def book_detail_view(request, id):
     if request.method == 'GET':
         book_id = get_object_or_404(models.Books, id=id)
