@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Добавление / Изменение заказа{% endblock %}
+{% block content %}
+<h2>{{ form.instance.id|yesno:"Изменить заказ,Добавить заказ" }}</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-save">💾 Сохранить</button>
+    <a href="{% url 'basket:order_list' %}" class="btn btn-cancel">Отмена</a>
+</form>
+{% endblock %}

@@ -7,7 +7,7 @@ from .forms import CustomerForm
 
 # === Список заказов ===
 def order_list(request):
-    orders = Customer.objects.all().order_by('-created_at')
+    orders = Customer.objects.all().order_by('-id')
     paginator = Paginator(orders, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -28,7 +28,7 @@ def order_add(request):
             return redirect('basket:order_list')
     else:
         form = CustomerForm()
-    return render(request, 'basket/order_form.html', {'form': form})
+    return render(request, 'basket/order_form.html', context={'form': form})
 
 
 # === Редактирование заказа ===
@@ -41,7 +41,7 @@ def order_edit(request, pk):
             return redirect('basket:order_list')
     else:
         form = CustomerForm(instance=order)
-    return render(request, 'basket/order_form.html', {'form': form})
+    return render(request, 'basket/order_form.html', context= {'form': form})
 
 
 # === Удаление заказа ===
@@ -50,4 +50,4 @@ def order_delete(request, pk):
     if request.method == 'POST':
         order.delete()
         return redirect('basket:order_list')
-    return render(request, 'basket/order_confirm_delete.html', {'order': order})
+    return render(request, 'basket/order_confirm_delete.html', context={'order': order})
