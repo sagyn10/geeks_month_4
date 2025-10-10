@@ -1,13 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.core.paginator import Paginator
-from .models import Order
-from .forms import OrderForm
+from .models import Customer
+from .forms import CustomerForm
 
 
 # === Список заказов ===
 def order_list(request):
-    orders = Order.objects.all().order_by('-created_at')
+    orders = Customer.objects.all().order_by('-created_at')
     paginator = Paginator(orders, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
@@ -22,31 +22,31 @@ def order_list(request):
 # === Создание нового заказа ===
 def order_add(request):
     if request.method == 'POST':
-        form = OrderForm(request.POST)
+        form = CustomerForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect('basket:order_list')
     else:
-        form = OrderForm()
+        form = CustomerForm()
     return render(request, 'basket/order_form.html', {'form': form})
 
 
 # === Редактирование заказа ===
 def order_edit(request, pk):
-    order = get_object_or_404(Order, pk=pk)
+    order = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
-        form = OrderForm(request.POST, instance=order)
+        form = CustomerForm(request.POST, instance=order)
         if form.is_valid():
             form.save()
             return redirect('basket:order_list')
     else:
-        form = OrderForm(instance=order)
+        form = CustomerForm(instance=order)
     return render(request, 'basket/order_form.html', {'form': form})
 
 
 # === Удаление заказа ===
 def order_delete(request, pk):
-    order = get_object_or_404(Order, pk=pk)
+    order = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
         order.delete()
         return redirect('basket:order_list')

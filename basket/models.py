@@ -1,28 +1,13 @@
 from django.db import models
-from books.models import Books
+from books.models import Books  # связь с таблицей книг
 
-class Order(models.Model):
-    STATUS_CHOICES = (
-        ('new', 'Новый'),
-        ('processing', 'В обработке'),
-        ('done', 'Выполнен'),
-        ('cancelled', 'Отменён'),
-    )
-
-    customer_name = models.CharField("Имя покупателя", max_length=200)
-    customer_phone = models.CharField("Телефон", max_length=50, blank=True)
-    customer_email = models.EmailField("Email", blank=True)
-    customer_address = models.TextField("Адрес", blank=True)
-    book = models.ForeignKey('books.Books', on_delete=models.CASCADE, related_name='orders', verbose_name="Книга")
-    quantity = models.PositiveIntegerField("Количество", default=1)
-    status = models.CharField("Статус заказа", max_length=20, choices=STATUS_CHOICES, default='new')
-    created_at = models.DateTimeField("Дата создания", auto_now_add=True)
-    updated_at = models.DateTimeField("Дата обновления", auto_now=True)
+class Customer(models.Model):
+    name = models.CharField(max_length=100, verbose_name='Имя')
+    email = models.EmailField(verbose_name='Почта')
+    phone = models.CharField(max_length=20, verbose_name='Телефон')
+    address = models.CharField(max_length=255, verbose_name='Адрес')
+    book = models.ForeignKey(Books, on_delete=models.CASCADE, verbose_name='Выбранная книга')
 
     def __str__(self):
-        return f"{self.customer_name} — {self.book} ({self.quantity})"
+        return f"{self.name} — {self.book.title}"
 
-    class Meta:
-        verbose_name = "Заказ"
-        verbose_name_plural = "Заказы"
-        ordering = ['-created_at']
