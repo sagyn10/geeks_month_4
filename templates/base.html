@@ -153,7 +153,19 @@
         <nav>
             <a href="/">Главная</a>
             <a href="{% url 'basket:order_list' %}" class="btn btn-orders">Мои заказы</a>
+            <a href="/clothes/" target="_blank" rel="noopener" class="btn btn-add" style="margin-left:10px;">Магазин</a>
 
+            {% if request.user.is_authenticated %}
+                <a href="{% url 'accounts:profile' %}" style="margin-left:20px; display:inline-block; vertical-align: middle;">
+                    <span style="display:inline-block; width:32px; height:32px; border-radius:50%; background:#1ed760; color:#000; text-align:center; line-height:32px; font-weight:bold;">
+                        {% if request.user.profile %}{{ request.user.profile.initials }}{% else %}{{ request.user.username|slice:":2"|upper }}{% endif %}
+                    </span>
+                </a>
+                <a href="{% url 'accounts:logout' %}" style="margin-left:10px;">Выйти</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}" style="margin-left:20px;">Войти</a>
+                <a href="{% url 'accounts:register' %}" style="margin-left:10px;">Регистрация</a>
+            {% endif %}
         </nav>
     </header>
 
@@ -161,8 +173,11 @@
         {% block content %}{% endblock %}
     </main>
 
+            <!-- Магазин открывается в новой вкладке — modal удалён -->
+
     <footer>
         &copy; Library.kg 2025
     </footer>
 </body>
+</html>
 </html>

@@ -10,6 +10,30 @@ body {
   position: relative;
 }
 
+/* === Кнопки секций магазина (Мужская/Женская/Детская/Все) === */
+.section-bar { text-align: center; margin-bottom: 18px; }
+.section-btn {
+  display: inline-block;
+  padding: 8px 14px;
+  margin: 0 6px;
+  background: linear-gradient(90deg,#1ed760,#00b894);
+  color: #041018;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.45), 0 2px 6px rgba(0,0,0,0.25) inset;
+  transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+}
+.section-btn:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(0,0,0,0.5); opacity: 0.98 }
+.section-btn.active { background: linear-gradient(90deg,#00ffd1,#00b3ff); color: #00121a; box-shadow: 0 18px 40px rgba(0,179,255,0.12); }
+
+.section-btn .icon { display:inline-block; width:14px; height:14px; margin-right:8px; border-radius:3px; vertical-align:middle; background: linear-gradient(90deg,#ffffff33,#ffffff11); box-shadow: inset 0 -2px 4px rgba(0,0,0,0.2); }
+.section-btn.active .icon { background: linear-gradient(90deg,#fff,#eafefe); }
+
+@media (max-width:600px){
+  .section-btn { padding: 8px 10px; margin: 6px 4px; font-size:14px; }
+}
+
 /* ... (вставь весь остальной CSS код до самого конца) ... */
 
 /* === Анимированный фон — живой неон === */
@@ -249,6 +273,9 @@ form input:focus, form select:focus, form textarea:focus {
   stroke: #00ffff;
   filter: drop-shadow(0 0 10px #00ffff) drop-shadow(0 0 20px #00ffff);
 } 
+
+ 
+
 
 
 

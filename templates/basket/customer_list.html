@@ -3,7 +3,7 @@
 <h1 style="text-align:center; margin-bottom:20px;">Список покупателей</h1>
 
 <div style="text-align:center; margin-bottom:15px;">
-  <a href="{% url 'add_customer' %}" 
+  <a href="{% url 'basket:add_customer' %}" 
      style="background:#4CAF50; color:white; padding:10px 20px; border-radius:8px; text-decoration:none;">
      ➕ Добавить покупателя
   </a>
@@ -24,8 +24,8 @@
     <td>{{ c.phone }}</td>
     <td>{{ c.book.title }}</td>
     <td>
-      <a href="{% url 'customer_detail' c.id %}">Подробнее</a> |
-      <a href="{% url 'delete_customer' c.id %}" style="color:red;">Удалить</a>
+  <a href="{% url 'basket:customer_detail' c.id %}">Подробнее</a> |
+  <a href="{% url 'basket:delete_customer' c.id %}" style="color:red;">Удалить</a>
     </td>
   </tr>
   {% empty %}

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="text-align:center;">
+  <div style="width:100px; height:100px; margin:0 auto; border-radius:50%; background:#1ed760; color:#000; display:flex; align-items:center; justify-content:center; font-size:36px;">
+    {{ initials }}
+  </div>
+
+  <h2>{{ request.user.get_full_name }}</h2>
+  <p>{{ request.user.email }}</p>
+
+  <a href="{% url 'accounts:logout' %}" class="btn btn-delete">Выйти</a>
+</div>
+{% endblock %}

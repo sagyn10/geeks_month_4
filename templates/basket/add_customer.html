@@ -12,7 +12,7 @@
   <select name="book" required>
     <option value="">Выберите книгу</option>
     {% for b in books %}
-      <option value="{{ b.id }}">{{ b.title }}</option>
+      <option value="{{ b.id }}" {% if preselected and preselected == b.id %}selected{% endif %}>{{ b.title }}</option>
     {% endfor %}
   </select>
 
@@ -22,6 +22,6 @@
 </form>
 
 <div style="text-align:center;">
-  <a href="{% url 'customer_list' %}">← Назад к списку</a>
+  <a href="{% url 'basket:customer_list' %}">← Назад к списку</a>
 </div>
 {% endblock %}

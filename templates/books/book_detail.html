@@ -9,7 +9,7 @@
     <p>Страниц: {{ book.quatity_page }}</p>
     <p>Год: {{ book.created_at|date:"Y" }}</p>
     <!-- Кнопка "Добавить в заказ" ведёт на страницу добавления покупателя с предзаполнением книги -->
-    <a href="{% url 'add_customer' %}?book={{ book.id }}" class="btn">➕ Добавить в заказ</a>
+  <a href="{% url 'basket:add_customer' %}?book={{ book.id }}" class="btn">➕ Добавить в заказ</a>
   </div>
 
   <div style="flex:1;">

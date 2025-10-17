@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Мужская одежда</h1>
+<form method="get" style="margin-bottom:10px; text-align:center;">
+  <input type="text" name="q" placeholder="Поиск по названию" value="{{ q|default:'' }}">
+  <button type="submit">Поиск</button>
+</form>
+<div class="section-bar">
+  <a class="section-btn {% if current_section == 'men' %}active{% endif %}" href="{% url 'clothes:men' %}" {% if current_section == 'men' %}aria-current="true"{% endif %}><span class="icon"></span>Мужская</a>
+  <a class="section-btn {% if current_section == 'women' %}active{% endif %}" href="{% url 'clothes:women' %}" {% if current_section == 'women' %}aria-current="true"{% endif %}><span class="icon"></span>Женская</a>
+  <a class="section-btn {% if current_section == 'kids' %}active{% endif %}" href="{% url 'clothes:kids' %}" {% if current_section == 'kids' %}aria-current="true"{% endif %}><span class="icon"></span>Детская</a>
+  <a class="section-btn {% if current_section == 'all' %}active{% endif %}" href="{% url 'clothes:item_list' %}" {% if current_section == 'all' %}aria-current="true"{% endif %}><span class="icon"></span>Все</a>
+</div>
+<div class="books-grid">
+  {% for item in items %}
+    <div class="book-card">
+      {% if item.image %}
+        <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width:100%; height:220px; object-fit:cover; border-radius:5px;">
+      {% endif %}
+      <h2>{{ item.title }}</h2>
+      <p>{{ item.description|truncatechars:120 }}</p>
+      <p>Цена: {{ item.price }}</p>
+      <a href="{% url 'clothes:men_detail' item.pk %}" class="btn btn-add">Подробнее</a>
+    </div>
+  {% empty %}
+    <p>Товары не найдены</p>
+  {% endfor %}
+</div>
+{% endblock %}

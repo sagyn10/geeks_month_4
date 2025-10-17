@@ -28,6 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'books',
     'basket',
+    'accounts',
+    'captcha',
+    'clothes',
 ]
 
 MIDDLEWARE = [
@@ -107,6 +110,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -116,3 +120,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Разрешить встраивание страниц в iframe с того же origin (нужно для модального магазина)
+X_FRAME_OPTIONS = 'SAMEORIGIN'

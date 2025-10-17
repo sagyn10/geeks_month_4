@@ -11,6 +11,8 @@
 </div>
 
 <div style="text-align:center;">
-  <a href="{% url 'customer_list' %}">← Назад к списку</a>
+  <a href="{% url 'basket:customer_list' %}">← Назад к списку</a>
+  |
+  <a href="{% url 'basket:edit_customer' customer.pk %}">Редактировать</a>
 </div>
 {% endblock %}
