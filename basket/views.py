@@ -2,52 +2,59 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.core.paginator import Paginator
 from .models import Customer
-from .forms import CustomerForm
+from .models import Books
 
 
-# === Список заказов ===
+# 🔹 Список заказов
 def order_list(request):
-    orders = Customer.objects.all().order_by('-id')
-    paginator = Paginator(orders, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'basket/order_list.html', {
-        'orders': page_obj,
-        'is_paginated': page_obj.has_other_pages(),
-        'page_obj': page_obj
-    })
+    customers = Customer.objects.all()
+    return render(request, 'order_list.html', {'customers': customers})
 
 
-# === Создание нового заказа ===
-def order_add(request):
+
+
+# 🔹 Отображение списка покупателей
+def customer_list(request):
+    customers = Customer.objects.all()
+    return render(request, 'customer_list.html', {'customers': customers})
+
+
+# 🔹 Добавление нового покупателя
+def add_customer(request):
     if request.method == 'POST':
-        form = CustomerForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('basket:order_list')
-    else:
-        form = CustomerForm()
-    return render(request, 'basket/order_form.html', context={'form': form})
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        phone = request.POST.get('phone')
+        address = request.POST.get('address')
+        book_id = request.POST.get('book')
+
+        book = get_object_or_404(Books, id=book_id)
+
+        Customer.objects.create(
+            name=name,
+            email=email,
+            phone=phone,
+            address=address,
+            book=book
+        )
+
+        return redirect('customer_list')
+
+    books = Books.objects.all()
+    return render(request, 'add_customer.html', {'books': books})
 
 
-# === Редактирование заказа ===
-def order_edit(request, pk):
-    order = get_object_or_404(Customer, pk=pk)
+# 🔹 Детали конкретного покупателя
+def customer_detail(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
+    return render(request, 'customer_detail.html', {'customer': customer})
+
+# 🔹 Удаление покупателя
+def delete_customer(request, pk):
+    customer = get_object_or_404(Customer, pk=pk)
     if request.method == 'POST':
-        form = CustomerForm(request.POST, instance=order)
-        if form.is_valid():
-            form.save()
-            return redirect('basket:order_list')
-    else:
-        form = CustomerForm(instance=order)
-    return render(request, 'basket/order_form.html', context= {'form': form})
+        customer.delete()
+        return redirect('customer_list')
 
+    return render(request, 'delete_customer.html', {'customer': customer})
 
-# === Удаление заказа ===
-def order_delete(request, pk):
-    order = get_object_or_404(Customer, pk=pk)
-    if request.method == 'POST':
-        order.delete()
-        return redirect('basket:order_list')
-    return render(request, 'basket/order_confirm_delete.html', context={'order': order})

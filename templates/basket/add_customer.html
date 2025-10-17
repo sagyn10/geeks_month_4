@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 style="text-align:center;">Добавить покупателя</h1>
+
+<form method="post" style="width:400px; margin:20px auto; display:flex; flex-direction:column; gap:10px;">
+  {% csrf_token %}
+  <input type="text" name="name" placeholder="Имя" required>
+  <input type="email" name="email" placeholder="Почта" required>
+  <input type="text" name="phone" placeholder="Телефон" required>
+  <input type="text" name="address" placeholder="Адрес" required>
+
+  <select name="book" required>
+    <option value="">Выберите книгу</option>
+    {% for b in books %}
+      <option value="{{ b.id }}">{{ b.title }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" style="background:#4CAF50; color:white; padding:10px; border:none; border-radius:6px;">
+    Сохранить
+  </button>
+</form>
+
+<div style="text-align:center;">
+  <a href="{% url 'customer_list' %}">← Назад к списку</a>
+</div>
+{% endblock %}

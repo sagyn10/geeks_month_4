@@ -11,3 +11,7 @@ class Customer(models.Model):
     def __str__(self):
         return f"{self.name} — {self.book.title}"
 
+    class Meta:
+        verbose_name = 'Покупатель'
+        verbose_name_plural = 'Покупатели'
+        

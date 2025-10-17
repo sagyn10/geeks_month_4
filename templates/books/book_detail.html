@@ -1,26 +1,58 @@
 {% extends 'base.html' %}
-
-{% block title %}{{ book_id.title }}{% endblock %}
-
 {% block content %}
-<h2>{{ book_id.title }}</h2>
-    <img src="{{ book_id.images.url }}" alt="" width="400" height="350">
-    <p>{{ book_id.description }}</p>
-    <p>{{ book_id.quatity_page }}</p>
-    <p>{{ book_id.author }}</p>
-    <iframe src="{{ book_id.book_audio }}" frameborder="0"></iframe>
-    <p>{{ book_id.created_at }}</p>
+<h1>{{ book.title }}</h1>
 
-    <h3>Средняя Оценка отзывов:  </h3>
+<div style="display:flex; gap:20px;">
+  <div>
+    <img src="{{ book.images.url }}" alt="{{ book.title }}" style="max-width:320px;">
+    <p>Автор: {{ book.author }}</p>
+    <p>Страниц: {{ book.quatity_page }}</p>
+    <p>Год: {{ book.created_at|date:"Y" }}</p>
+    <!-- Кнопка "Добавить в заказ" ведёт на страницу добавления покупателя с предзаполнением книги -->
+    <a href="{% url 'add_customer' %}?book={{ book.id }}" class="btn">➕ Добавить в заказ</a>
+  </div>
 
-    <ul>
-        {% for i in book_id.reviews.all %}
+  <div style="flex:1;">
+    <h3>Описание</h3>
+    <p>{{ book.description|linebreaks }}</p>
 
-        <li>
-            <p>Оценка:{{ i.mark_book }}</p>
-            <p>{{ i.review_text }}</p>
-            <p>{{ i.created_at }}</p>
-        </li>
+    <h3>Видео</h3>
+    <div style="max-width:720px;">
+      <iframe src="{{ book.book_audio }}" style="width:100%; height:360px;" frameborder="0" allowfullscreen></iframe>
+    </div>
 
-        {% endfor %}
-    </ul>
+    <h3>Средняя оценка: {{ avg_rating }} / 5</h3>
+
+    <h4>Отзывы</h4>
+    {% if reviews %}
+      {% for r in reviews %}
+        <div style="padding:8px; border:1px solid #ddd; margin-bottom:8px;">
+          <strong>{{ r.rating }} / 5</strong>
+          <p>{{ r.text }}</p>
+          <small>{{ r.created_at }}</small>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p>Пока нет отзывов</p>
+    {% endif %}
+
+    <h4>Оставить отзыв</h4>
+    <form method="post">
+      {% csrf_token %}
+      <label>Оценка:
+        <select name="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5" selected>5</option>
+        </select>
+      </label>
+      <br>
+      <textarea name="text" rows="3" placeholder="Текст отзыва..."></textarea>
+      <br>
+      <button type="submit" name="review_submit">Отправить отзыв</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

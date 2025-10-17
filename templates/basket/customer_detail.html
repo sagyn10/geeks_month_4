@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 style="text-align:center;">Информация о покупателе</h1>
+
+<div style="width:400px; margin:20px auto; border:1px solid #ddd; padding:20px; border-radius:8px;">
+  <p><strong>Имя:</strong> {{ customer.name }}</p>
+  <p><strong>Почта:</strong> {{ customer.email }}</p>
+  <p><strong>Телефон:</strong> {{ customer.phone }}</p>
+  <p><strong>Адрес:</strong> {{ customer.address }}</p>
+  <p><strong>Выбранная книга:</strong> {{ customer.book.title }}</p>
+</div>
+
+<div style="text-align:center;">
+  <a href="{% url 'customer_list' %}">← Назад к списку</a>
+</div>
+{% endblock %}
