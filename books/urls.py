@@ -1,13 +1,18 @@
 # books/urls.py
 from django.urls import path
-from . import views
-
+from .views import (
+    BooksListView,
+    BooksDetailView,
+    FirstTimeView,
+    RandomNumbersView,
+    ShowBiographyView,
+)
 
 
 urlpatterns = [
-    path('', views.book_list_view, name='books_list'),
-    path('book_detail/<int:id>/', views.book_detail_view, name='books_detail'),
-    path('time/', views.first_time_view, name='first_time'),
-    path('random_number/', views.random_nambers_list, name='random_number'),
-    path('biography/', views.show_biography, name='show_biography'),
+    path('', BooksListView.as_view(), name='books_list'),
+    path('book_detail/<int:id>/', BooksDetailView.as_view(), name='books_detail'),
+    path('time/', FirstTimeView.as_view(), name='first_time'),
+    path('random_number/', RandomNumbersView.as_view(), name='random_number'),
+    path('biography/', ShowBiographyView.as_view(), name='show_biography'),
 ]

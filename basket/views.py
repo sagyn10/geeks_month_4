@@ -5,81 +5,70 @@ from .models import Customer
 from .models import Books
 
 
-# 🔹 Список заказов
-def order_list(request):
-    customers = Customer.objects.all()
-    return render(request, 'basket/order_list.html', {'customers': customers})
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, View, UpdateView, DeleteView
+
+class OrderListView(ListView):
+    model = Customer
+    template_name = 'basket/order_list.html'
+    context_object_name = 'customers'
 
 
 
 
-# 🔹 Отображение списка покупателей
-def customer_list(request):
-    customers = Customer.objects.all()
-    return render(request, 'basket/customer_list.html', {'customers': customers})
+class CustomerListView(ListView):
+    model = Customer
+    template_name = 'basket/customer_list.html'
+    context_object_name = 'customers'
 
 
-# 🔹 Добавление нового покупателя
-def add_customer(request):
-    if request.method == 'POST':
+
+
+
+class AddCustomerView(View):
+    def get(self, request, *args, **kwargs):
+        books = Books.objects.all()
+        preselected = request.GET.get('book')
+        try:
+            preselected = int(preselected) if preselected else None
+        except ValueError:
+            preselected = None
+        return render(request, 'basket/add_customer.html', {'books': books, 'preselected': preselected})
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         email = request.POST.get('email')
         phone = request.POST.get('phone')
         address = request.POST.get('address')
         book_id = request.POST.get('book') or request.GET.get('book')
         if not book_id:
-            # если нет книги в запросе — перенаправим обратно на список
             return redirect('basket:customer_list')
-
         book = get_object_or_404(Books, id=book_id)
-        Customer.objects.create(
-            name=name,
-            email=email,
-            phone=phone,
-            address=address,
-            book=book
-        )
-
-    return redirect('basket:customer_list')
-
-    books = Books.objects.all()
-    # если передан GET-параметр book — преобразуем в int для сравнения в шаблоне
-    preselected = request.GET.get('book')
-    try:
-        preselected = int(preselected) if preselected else None
-    except ValueError:
-        preselected = None
-    return render(request, 'basket/add_customer.html', {'books': books, 'preselected': preselected})
+        Customer.objects.create(name=name, email=email, phone=phone, address=address, book=book)
+        return redirect('basket:customer_list')
 
 
-# 🔹 Детали конкретного покупателя
-def customer_detail(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
-    return render(request, 'basket/customer_detail.html', {'customer': customer})
-
-# 🔹 Удаление покупателя
-def delete_customer(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
-    if request.method == 'POST':
-        customer.delete()
-        return redirect('customer_list')
-
-    return render(request, 'basket/delete_customer.html', {'customer': customer})
+class CustomerDetailView(DetailView):
+    model = Customer
+    template_name = 'basket/customer_detail.html'
+    pk_url_kwarg = 'pk'
+    context_object_name = 'customer'
 
 
-def edit_customer(request, pk):
-    customer = get_object_or_404(Customer, pk=pk)
-    if request.method == 'POST':
-        customer.name = request.POST.get('name')
-        customer.email = request.POST.get('email')
-        customer.phone = request.POST.get('phone')
-        customer.address = request.POST.get('address')
-        book_id = request.POST.get('book')
-        if book_id:
-            customer.book = get_object_or_404(Books, id=book_id)
-        customer.save()
-        return redirect('basket:customer_detail', pk=customer.pk)
+class CustomerDeleteView(DeleteView):
+    model = Customer
+    template_name = 'basket/delete_customer.html'
+    pk_url_kwarg = 'pk'
+    success_url = reverse_lazy('basket:customer_list')
 
-    books = Books.objects.all()
-    return render(request, 'basket/edit_customer.html', {'customer': customer, 'books': books})
+
+
+class CustomerUpdateView(UpdateView):
+    model = Customer
+    template_name = 'basket/edit_customer.html'
+    fields = ['name', 'email', 'phone', 'address', 'book']
+    pk_url_kwarg = 'pk'
+
+    def get_success_url(self):
+        return reverse_lazy('basket:customer_detail', kwargs={'pk': self.object.pk})
 

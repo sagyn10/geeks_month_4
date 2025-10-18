@@ -1,40 +1,36 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from django.contrib.auth import login
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import FormView, TemplateView
 from .forms import ApplicantSignUpForm, LoginForm
 
 
-def register_view(request):
-    if request.method == 'POST':
-        form = ApplicantSignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('accounts:profile')
-    else:
-        form = ApplicantSignUpForm()
-    return render(request, 'accounts/register.html', {'form': form})
+class RegisterView(FormView):
+    template_name = 'accounts/register.html'
+    form_class = ApplicantSignUpForm
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('accounts:profile')
 
 
-def login_view(request):
-    if request.method == 'POST':
-        form = LoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('accounts:profile')
-    else:
-        form = LoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
+class CustomLoginView(LoginView):
+    template_name = 'accounts/login.html'
+    authentication_form = LoginForm
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('/')
+class CustomLogoutView(LogoutView):
+    next_page = '/'
 
 
-@login_required
-def profile_view(request):
-    profile = getattr(request.user, 'profile', None)
-    initials = profile.initials() if profile else (request.user.username[:2].upper())
-    return render(request, 'accounts/profile.html', {'profile': profile, 'initials': initials})
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'accounts/profile.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        profile = getattr(self.request.user, 'profile', None)
+        initials = profile.initials() if profile else (self.request.user.username[:2].upper())
+        ctx.update({'profile': profile, 'initials': initials})
+        return ctx
