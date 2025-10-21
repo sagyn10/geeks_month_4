@@ -88,8 +88,4 @@ class LoginForm(AuthenticationForm):
         self.fields['password'].label = 'Пароль'
         self.fields['password'].widget.attrs.update({'placeholder': 'Пароль'})
         # добавляем капчу если поле определено выше (CaptchaField может быть в модуле)
-        try:
-            self.fields['captcha'] = CaptchaField(label='Капча', required=False)
-        except Exception:
-            # если captcha не доступна — ничего не делаем
-            pass
+            # Removed captcha from login form as it now only requires username/password.

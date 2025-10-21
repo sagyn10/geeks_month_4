@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>{% if form.instance.pk %}Изменить фильм{% else %}Добавить фильм{% endif %}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>
+      <label for="id_title">Название</label>
+      {{ form.title }}
+    </p>
+    <p>
+      <label for="id_description">Описание</label>
+      {{ form.description }}
+    </p>
+    <p>
+      <label for="id_year">Год</label>
+      {{ form.year }}
+    </p>
+    <p>
+      <label for="id_genres">Жанры</label>
+      {{ form.genres }}
+    </p>
+    <p>
+      <label for="id_image">Обложка</label>
+      {{ form.image }}
+    </p>
+    <button type="submit">Сохранить</button>
+  </form>
+  <p><a href="{% url 'CineBoard:movie_list' %}">← Назад</a></p>
+{% endblock %}
